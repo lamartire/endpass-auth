@@ -6,6 +6,7 @@
     :disabled="disabled"
     :autofocus="autofocus"
     :name="name"
+    :required="required"
     type="text"
     @keypress="emitKeypress"
     @input="emitInput"
@@ -37,6 +38,10 @@ export default {
       default: false,
     },
     autofocus: {
+      type: Boolean,
+      default: false,
+    },
+    required: {
       type: Boolean,
       default: false,
     },

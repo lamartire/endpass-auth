@@ -370,21 +370,7 @@ const cancelSignPermission = () => {
 };
 
 const awaitAuthConfirm = async ({ dispatch }) => {
-  const waiter = new Promise(resolve => {
-    let timerId;
-
-    const checker = async () => {
-      const status = await IdentityService.getAuthStatus();
-      if (status === 200 || status === 403) {
-        resolve();
-      } else {
-        timerId = setTimeout(checker, 1500);
-      }
-    };
-
-    checker();
-  });
-  await waiter;
+  await IdentityService.awaitAuthConfirm();
   await dispatch('defineOnlyV3Accounts');
   authChannel.put(Answer.createOk());
 };
@@ -421,7 +407,6 @@ export default {
   getRecoveryIdentifier,
   recover,
   validateCustomServer,
-
   getAuthStatus,
   signPermission,
   cancelSignPermission,

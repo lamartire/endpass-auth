@@ -2,6 +2,7 @@
   <button
     :disabled="!auth2Loaded"
     :submit="false"
+    type="button"
     class="google-button"
     data-test="submit-button"
     @click="loginWithGoogle"

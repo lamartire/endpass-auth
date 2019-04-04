@@ -18,7 +18,9 @@ export default async function withAuth(options, action) {
   }
 
   dialogOpen('auth');
+
   const res = await authChannel.take();
+
   if (res.status === false) {
     action.end();
   }

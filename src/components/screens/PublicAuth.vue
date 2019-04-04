@@ -1,12 +1,12 @@
 <template>
   <screen @close="handleWindowClose">
-    <v-frame :loading="!inited" :closable="isDialog" @close="handleAuthCancel">
+    <v-frame :loading="!inited">
       <composite-auth-form
         :mode="currentAuthMode"
         :loading="loading"
-        :closable="closable"
         :error="error"
-        @cancel="handleAuthCancel"
+        :inited="inited"
+        @recover="handleRecover"
         @submit="handleAuthSubmit"
         @account-request="handleAccountRequest"
         @error="handleAuthError"
@@ -22,14 +22,13 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import Screen from '@/components/common/Screen';
 import VFrame from '@/components/common/VFrame';
 import CompositeAuthForm from '@/components/forms/CompositeAuth';
-import { IDENTITY_MODE } from '@/constants';
 
 export default {
   name: 'Auth',
 
   data: () => ({
     error: null,
-    needAccount: false,
+
     recoverAccess: false,
     serverMode: null,
   }),
@@ -42,7 +41,6 @@ export default {
       otpEmail: state => state.accounts.otpEmail,
       accounts: state => state.accounts.accounts,
       isAuthorized: state => state.accounts.isAuthorized,
-      isIdentityMode: state => state.core.isIdentityMode,
     }),
     ...mapGetters(['isDialog']),
 
@@ -56,14 +54,14 @@ export default {
       } = this;
 
       switch (true) {
-        case isAuthorized && isAccountsEmpty:
-          return 'create';
-        case otpEmail && !recoverAccess:
-          return 'otp';
-        case otpEmail && recoverAccess && !sent:
-          return 'recover';
         case !isAuthorized && sent:
           return 'sent';
+        case isAuthorized && isAccountsEmpty:
+          return 'create';
+        case otpEmail && recoverAccess && !sent:
+          return 'recover';
+        case otpEmail && !recoverAccess:
+          return 'otp';
         case isAuthorized && sent:
           return 'authorized';
         default:
@@ -93,9 +91,9 @@ export default {
 
   methods: {
     ...mapActions([
+      'redirectToLogin',
       'auth',
       'cancelAuth',
-      'confirmAuth',
       'confirmAuthViaOtp',
       'awaitAuthMessage',
       'awaitAuthConfirm',
@@ -106,50 +104,11 @@ export default {
       'dialogClose',
     ]),
 
-    // async handleOtpSubmit(code) {
-    //   try {
-    //     await this.confirmAuthViaOtp({
-    //       email: this.otpEmail,
-    //       code,
-    //     });
-    //   } catch (err) {
-    //     console.error('handle error', err);
-    //     this.handleAuthError(err);
-    //   }
-    // },
-
-    // async handleOtpRecover() {
-    //   try {
-    //     await this.getRecoveryIdentifier();
-    //     this.recoverAccess = true;
-    //   } catch (err) {
-    //     console.error(err);
-    //     this.handleRecoverError(err);
-    //   }
-    // },
-
-    // async handleRecoverSubmit(seedPhrase) {
-    //   try {
-    //     await this.recover({ seedPhrase });
-    //   } catch (err) {
-    //     console.error(err);
-    //     this.handleRecoverError(err);
-    //   }
-    // },
-
     handleAuthorizationDataChange() {
-      const {
-        isAuthorized,
-        awaitAccountCreate,
-        isAccountsEmpty,
-        confirmAuth,
-        serverMode,
-      } = this;
+      const { isAuthorized, isAccountsEmpty } = this;
 
-      if (isAuthorized && isAccountsEmpty) {
-        awaitAccountCreate();
-      } else if (isAuthorized && !isAccountsEmpty) {
-        confirmAuth(serverMode);
+      if (isAuthorized && !isAccountsEmpty) {
+        this.redirectToLogin(this.$router);
       }
     },
 
@@ -168,35 +127,89 @@ export default {
     },
 
     async handleAuthSubmit(payload) {
-      console.log('auth submit', this.currentAuthMode, payload);
-      //       try {
-      //         this.serverMode = serverMode;
-      //
-      //         if (serverMode.type !== IDENTITY_MODE.DEFAULT) {
-      //           return this.confirmAuth(serverMode);
-      //         }
-      //
-      //         await this.auth({ email, serverMode });
-      //         await this.awaitAuthConfirm();
-      //       } catch (err) {
-      //         console.error(err);
-      //         this.handleAuthError(err);
-      //       }
+      switch (this.currentAuthMode) {
+        case 'otp':
+          this.handleOtpFormSubmit(payload);
+          break;
+        case 'recover':
+          this.handleRecoverFormSubmit();
+          break;
+        default:
+          this.handleAuthFormSubmit(payload);
+      }
     },
 
-    //     handleAuthError() {
-    //       this.error = 'Auth failed. Please, try again';
-    //     },
-    //
-    //     handleRecoverError(error) {
-    //       const errorMessage = get(error, 'message');
-    //
-    //       if (errorMessage) {
-    //         this.error = errorMessage;
-    //       } else {
-    //         this.error = 'Recover failed. Please, try again';
-    //       }
-    //     },
+    async handleAuthFormSubmit({ email, serverMode }) {
+      try {
+        await this.auth({ email, serverMode });
+        await this.awaitAuthConfirm();
+      } catch (err) {
+        console.error(err);
+        this.handleAuthError(err);
+      }
+    },
+
+    async handleOtpFormSubmit(code) {
+      try {
+        await this.confirmAuthViaOtp({
+          email: this.otpEmail,
+          code,
+        });
+      } catch (err) {
+        console.error('handle error', err);
+        this.handleAuthError(err);
+      }
+    },
+
+    async handleRecoverFormSubmit(seedPhrase) {
+      try {
+        await this.recover({ seedPhrase });
+      } catch (err) {
+        console.error(err);
+        this.handleRecoverError(err);
+      }
+    },
+
+    handleRecover(payload) {
+      switch (this.currentAuthMode) {
+        case 'otp':
+          this.handleOtpRecover(payload);
+          break;
+        default:
+          break;
+      }
+    },
+
+    async handleOtpRecover() {
+      try {
+        await this.getRecoveryIdentifier();
+        this.recoverAccess = true;
+      } catch (err) {
+        console.error(err);
+        this.handleRecoverError(err);
+      }
+    },
+
+    handleError(err) {
+      switch (this.currentAuthMode) {
+        default:
+          this.handleAuthError(err);
+      }
+    },
+
+    handleAuthError() {
+      this.error = 'Auth failed. Please, try again';
+    },
+
+    handleRecoverError(error) {
+      const errorMessage = get(error, 'message');
+
+      if (errorMessage) {
+        this.error = errorMessage;
+      } else {
+        this.error = 'Recover failed. Please, try again';
+      }
+    },
   },
 
   components: {

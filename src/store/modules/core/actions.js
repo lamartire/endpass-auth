@@ -49,8 +49,8 @@ const dialogCloseWrap = () => {
 };
 
 export default {
+  dialogClose: dialogCloseWrap,
   init,
   setWeb3NetworkProvider,
-  dialogClose: dialogCloseWrap,
   startBridge,
 };

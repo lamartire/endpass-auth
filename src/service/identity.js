@@ -121,6 +121,24 @@ export const authWithGitHub = code =>
 
 export const logout = () => request.post(`${identityBaseUrl}/api/v1.1/logout`);
 
+// TODO: implement when server part will be done
+export const hydraLogin = async (challengeId, signature) =>
+  request
+    .post('', {
+      challengeId,
+      signature,
+    })
+    .then(res => {
+      if (!res.success) throw new Error(res.message);
+
+      return res;
+    });
+
+export const getAuthStatus = async () =>
+  getAccounts()
+    .then(() => 200)
+    .catch(err => get(err, ['response', 'status']));
+
 export const awaitLogoutConfirm = () =>
   new Promise(resolve => {
     /* eslint-disable-next-line */
@@ -131,6 +149,24 @@ export const awaitLogoutConfirm = () =>
         clearInterval(interval);
 
         return resolve();
+      }
+    }, 1500);
+  });
+
+export const awaitAuthConfirm = () =>
+  new Promise((resolve, reject) => {
+    /* eslint-disable-next-line */
+    const interval = setInterval(async () => {
+      try {
+        const status = await getAuthStatus();
+
+        if (status === 200 || status === 403) {
+          clearInterval(interval);
+
+          return resolve(status);
+        }
+      } catch (err) {
+        return reject(err);
       }
     }, 1500);
   });
@@ -179,16 +215,6 @@ export const recover = (email, signature, redirectUrl) =>
       return res;
     });
 
-export const getAuthStatus = async () => {
-  let res = 200;
-  try {
-    await getAccounts();
-  } catch (e) {
-    res = get(e, ['response', 'status']);
-  }
-  return res;
-};
-
 export default {
   getSettings,
   getOtpSettings,
@@ -207,6 +233,7 @@ export default {
   logout,
   awaitLogoutConfirm,
   awaitAccountCreate,
+  awaitAuthConfirm,
   getRecoveryIdentifier,
   recover,
 };
