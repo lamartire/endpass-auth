@@ -9,10 +9,10 @@ exports[`Otp render should correctly render component 1`] = `
   </form-field-stub>
   <!---->
   <form-field-stub>
-    <v-input-stub placeholder="Seed phrase" name="seedPhrase" value="" label="Seed phrase" required=""></v-input-stub>
+    <v-input-stub label="Seed phrase" value="" name="seedPhrase" placeholder="Seed phrase" required=""></v-input-stub>
   </form-field-stub>
   <form-controls-stub>
-    <v-button-stub disabled="true" type="primary" submit="true" data-test="submit-button">
+    <v-button-stub skin="primary" size="normal" disabled="true" data-test="submit-button">
       Recover access
     </v-button-stub>
   </form-controls-stub>

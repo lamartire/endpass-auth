@@ -19,8 +19,8 @@
     <form-field>
       <v-input
         v-model="code"
-        :invalid="!isCodeValid"
-        :autofocus="true"
+        :error="codeErrorMessage"
+        autofocus="true"
         type="number"
         name="code"
         placeholder="Enter received code..."
@@ -38,8 +38,6 @@
       </a>
       <v-button
         :disabled="!isCodeValid || loading"
-        :submit="true"
-        type="primary"
         data-test="submit-button"
       >
         {{ primaryButtonLabel }}
@@ -49,8 +47,8 @@
 </template>
 
 <script>
-import VButton from '@/components/common/VButton.vue';
-import VInput from '@/components/common/VInput.vue';
+import VButton from '@endpass/ui/kit/VButton';
+import VInput from '@endpass/ui/kit/VInput';
 import Message from '@/components/common/Message.vue';
 import FormField from '@/components/common/FormField.vue';
 import FormControls from '@/components/common/FormControls.vue';
@@ -77,6 +75,10 @@ export default {
   computed: {
     primaryButtonLabel() {
       return !this.loading ? 'Submit code' : 'Loading...';
+    },
+
+    codeErrorMessage() {
+      return this.isCodeValid ? null : 'Invalid code';
     },
 
     isCodeValid() {

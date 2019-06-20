@@ -25,8 +25,6 @@
     <form-controls>
       <v-button
         :disabled="!isSeedPhraseValid || loading"
-        :submit="true"
-        type="primary"
         data-test="submit-button"
       >
         {{ primaryButtonLabel }}
@@ -36,8 +34,8 @@
 </template>
 
 <script>
-import VButton from '@/components/common/VButton.vue';
-import VInput from '@/components/common/VInput.vue';
+import VButton from '@endpass/ui/kit/VButton';
+import VInput from '@endpass/ui/kit/VInput';
 import Message from '@/components/common/Message.vue';
 import FormField from '@/components/common/FormField.vue';
 import FormControls from '@/components/common/FormControls.vue';
