@@ -10,6 +10,9 @@ describe('Auth', () => {
       propsData: {
         isInited: true,
       },
+      provide: {
+        theme: 'default',
+      },
     });
   });
 
@@ -26,6 +29,9 @@ describe('Auth', () => {
           message: 'foo',
           error: 'bar',
         },
+        provide: {
+          theme: 'default',
+        },
       });
 
       expect(wrapper.findAll('[data-test=error-message]').exists()).toBe(true);
@@ -36,6 +42,9 @@ describe('Auth', () => {
         propsData: {
           message: 'foo',
           loading: true,
+        },
+        provide: {
+          theme: 'default',
         },
       });
 
@@ -75,6 +84,9 @@ describe('Auth', () => {
           propsData: {
             message: 'foo',
             isInited: true,
+          },
+          provide: {
+            theme: 'default',
           },
         });
       });

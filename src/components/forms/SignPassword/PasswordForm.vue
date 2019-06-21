@@ -1,8 +1,14 @@
 <template>
-  <form data-test="sign-form" @submit.prevent="emitSubmit">
+  <form
+    data-test="sign-form"
+    @submit.prevent="emitSubmit"
+  >
     <form-field v-if="requesterUrl">
       Please apply connect to
-      <a :href="requesterUrl" data-test="requester-url">
+      <a
+        :href="requesterUrl"
+        data-test="requester-url"
+      >
         {{ requesterUrl }}
       </a>
     </form-field>
@@ -12,7 +18,10 @@
       </message>
     </form-field>
     <form-field v-if="error">
-      <message :error="true" data-test="error-message">
+      <message
+        :error="true"
+        data-test="error-message"
+      >
         {{ error }}
       </message>
     </form-field>
@@ -30,6 +39,7 @@
     <form-controls>
       <v-button
         :disabled="isLoading || !isFormValid"
+        type="submit"
         class="button"
         data-test="submit-button"
       >

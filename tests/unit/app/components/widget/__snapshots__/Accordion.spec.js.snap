@@ -2,6 +2,6 @@
 
 exports[`Accordion should correctly render 1`] = `
 <section class="accordion">
-  <section class="accordion-content" style="max-height: none; height: 0px; overflow: hidden; transition: height ease 0.3s;"></section>
+  <section class="accordion-content" style="max-height: none; height: 0px; overflow: hidden;"></section>
 </section>
 `;

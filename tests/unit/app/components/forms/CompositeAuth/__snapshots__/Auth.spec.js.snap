@@ -13,7 +13,7 @@ exports[`Auth render should change submit button text if loading and make it dis
     <v-input-stub value="" error="Invalid email" autofocus="true" name="email" type="email" placeholder="Enter your email..." data-test="email-input"></v-input-stub>
   </form-field-stub>
   <form-field-stub>
-    <v-button-stub skin="primary" size="big" disabled="true" width="100%" data-test="submit-button">
+    <v-button-stub skin="primary" size="big" disabled="true" data-test="submit-button">
       Loading...
     </v-button-stub>
   </form-field-stub>
@@ -49,7 +49,7 @@ exports[`Auth render should correctly render Auth component 1`] = `
     <v-input-stub value="" error="Invalid email" autofocus="true" name="email" type="email" placeholder="Enter your email..." data-test="email-input"></v-input-stub>
   </form-field-stub>
   <form-field-stub>
-    <v-button-stub skin="primary" size="big" disabled="true" width="100%" data-test="submit-button">
+    <v-button-stub skin="primary" size="big" disabled="true" data-test="submit-button">
       Login
     </v-button-stub>
   </form-field-stub>

@@ -38,6 +38,7 @@
       </a>
       <v-button
         :disabled="!isCodeValid || loading"
+        type="submit"
         data-test="submit-button"
       >
         {{ primaryButtonLabel }}

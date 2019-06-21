@@ -5,7 +5,11 @@ describe('PasswordForm', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallowMount(PasswordForm);
+    wrapper = shallowMount(PasswordForm, {
+      provide: {
+        theme: 'default',
+      },
+    });
   });
 
   describe('render', () => {

@@ -24,6 +24,7 @@
     </form-field>
     <form-controls>
       <v-button
+        type="submit"
         :disabled="!isSeedPhraseValid || loading"
         data-test="submit-button"
       >

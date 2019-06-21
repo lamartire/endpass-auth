@@ -5,16 +5,11 @@
         data-test="define-pwd-form"
         @submit.prevent="onCreateWallet"
       >
-        <form-field label="Please choose password:">
+        <form-field>
           <v-input
             v-model="password"
-            v-validate="'required|min:8'"
-            data-vv-as="password"
-            data-vv-name="password"
-            label=""
-            :error="errors.first('password')"
-            :autofocus="true"
-            required
+            label="Please choose password:"
+            autofocus="true"
             type="password"
             placeholder="Enter password..."
           />
@@ -22,13 +17,7 @@
         <form-field>
           <v-input
             v-model="passwordConfirm"
-            v-validate="'required|min:8'"
-            label=""
-            data-vv-as="password confirm"
-            data-vv-name="passwordConfirm"
-            :error="errors.first('passwordConfirm')"
-            required
-            :autofocus="true"
+            autofocus="true"
             type="password"
             placeholder="Confirm password..."
           />
@@ -43,8 +32,8 @@
         <form-controls>
           <v-button
             :disabled="!canSubmit"
-            :submit="true"
-            type="primary"
+            size="big"
+            type="submit"
             data-test="submit-button"
           >
             {{ primaryButtonLabel }}
@@ -63,19 +52,25 @@
           {{ seedKey }}
         </p>
       </div>
-      <v-button @click="onContinue">
-        Continue
-      </v-button>
+      <form-controls>
+        <v-button
+          type="button"
+          size="big"
+          @click="onContinue"
+        >
+          Continue {{ timeoutTitle }}
+        </v-button>
+      </form-controls>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-import VButton from '@/components/common/VButton.vue';
+import VButton from '@endpass/ui/kit/VButton';
 import Message from '@/components/common/Message.vue';
 import FormControls from '@/components/common/FormControls.vue';
-import VInput from '@endpass/ui/components/VInput';
+import VInput from '@endpass/ui/kit/VInput';
 import FormField from '@/components/common/FormField.vue';
 import formMixin from '@/mixins/form';
 

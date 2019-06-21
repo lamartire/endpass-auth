@@ -5,7 +5,11 @@ describe('Otp', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallowMount(Otp);
+    wrapper = shallowMount(Otp, {
+      provide: {
+        theme: 'default',
+      },
+    });
   });
 
   describe('render', () => {

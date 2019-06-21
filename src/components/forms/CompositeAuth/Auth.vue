@@ -38,7 +38,6 @@
         <v-button
           :disabled="!isFormValid"
           size="big"
-          width="100%"
           data-test="submit-button"
         >
           {{ primaryButtonLabel }}

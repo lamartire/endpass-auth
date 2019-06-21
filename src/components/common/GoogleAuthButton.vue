@@ -8,12 +8,9 @@
   >
     <v-svg-icon
       slot="iconBefore"
-      style="margin: 0 5px 0 0;"
       name="google"
     />
-    <template slot="default">
-      Google
-    </template>
+    Google
   </v-button>
 </template>
 
@@ -85,3 +82,9 @@ export default {
   },
 };
 </script>
+
+<style lang="postcss">
+.svg-icon--google {
+  margin: 0 5px 0 0;
+}
+</style>
