@@ -8,7 +8,12 @@
         <form-field>
           <v-input
             v-model="password"
+            v-validate="'required|min:8'"
             label="Please choose password:"
+            data-vv-as="password"
+            data-vv-name="password"
+            :error="errors.first('password')"
+            required
             autofocus="true"
             type="password"
             placeholder="Enter password..."
@@ -17,6 +22,12 @@
         <form-field>
           <v-input
             v-model="passwordConfirm"
+            v-validate="'required|min:8'"
+            label=""
+            data-vv-as="password confirm"
+            data-vv-name="passwordConfirm"
+            :error="errors.first('passwordConfirm')"
+            required
             autofocus="true"
             type="password"
             placeholder="Confirm password..."
@@ -58,7 +69,7 @@
           size="big"
           @click="onContinue"
         >
-          Continue {{ timeoutTitle }}
+          Continue
         </v-button>
       </form-controls>
     </div>
