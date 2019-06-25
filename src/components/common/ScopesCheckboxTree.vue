@@ -1,15 +1,15 @@
 <template>
   <div>
     <label class="checkbox">
-      <input
+      <v-checkbox
         v-if="level.title"
-        :checked="valuesMap[level.key]"
+        :model-value="valuesMap[level.key]"
         type="checkbox"
-        @input="onChange(level, $event)"
+        @change="onChange(level, $event)"
       >
-      {{ level.title }}
+        {{ level.title }}
+      </v-checkbox>
     </label>
-
     <scopes-checkbox-tree
       v-for="childLevel in children"
       :key="childLevel.key"
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import VCheckbox from '@endpass/ui/kit/VCheckbox';
+
 const ScopesCheckboxTree = {
   name: 'ScopesCheckboxTree',
 
@@ -34,10 +36,12 @@ const ScopesCheckboxTree = {
       type: Object,
       default: () => ({}),
     },
+
     valuesMap: {
       type: Object,
       default: () => ({}),
     },
+
     level: {
       type: Object,
       default: () => ({}),
@@ -49,36 +53,23 @@ const ScopesCheckboxTree = {
   }),
 
   methods: {
-    onChange(scope, ev) {
-      const value = ev.target.checked;
+    onChange(scope, value) {
+      Object.keys(this.valuesMap).forEach(key => {
+        if (key.indexOf(scope.key) === 0) {
+          this.valuesMap[key] = value;
+        }
+      });
 
-      const valuesMap = Object.keys(this.valuesMap)
-        .filter(key => key.indexOf(scope.key) === 0) // find all deep children with current level
-        .reduce(
-          (map, key) => {
-            Object.assign(map, { [key]: value });
-            return map;
-          },
-          { ...this.valuesMap },
-        );
-
-      this.$emit('change', valuesMap);
+      this.$emit('change', this.valuesMap);
     },
 
     onChangeLevel(valuesMap) {
-      const childrenKeys = Object.keys(this.level.children);
-
-      const isLevelChecked = !childrenKeys
-        .map(key => valuesMap[key])
-        .includes(false);
-
-      const newValueMap = {
-        ...valuesMap,
-        [this.level.key]: isLevelChecked,
-      };
-
-      this.$emit('change', newValueMap);
+      this.$emit('change', valuesMap);
     },
+  },
+
+  components: {
+    VCheckbox,
   },
 };
 
